@@ -8,7 +8,11 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.fernet import Fernet, InvalidToken
 
+#TODO:
+#b64urlsafe
+#add install and set up folders.
 #TMPsalt use: os.random(16)
+
 tmp_pw = {
     'spicey': b'\x8ds U\xc3d\xa7\xce\xad\x7f\x01\rX\xde\xaf\xb6', 
     'skeleton': 'Dm1We0qIUPgaesn_Gs2nAmGKKcHMTegvMm_tO8ou0p0=',
