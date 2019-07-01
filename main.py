@@ -77,9 +77,8 @@ def decrypt_pass(enc_pass, key):
 def tmp_setup():
     fname = base64.urlsafe_b64encode(os.urandom(16)).decode()
     fname = fname + '.pdb'
-    with open(fname) as f:
-        f.write()
-
+    f = open(fname, 'w+')
+    f.close()
 
 
 if __name__ == '__main__':
