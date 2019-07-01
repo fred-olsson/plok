@@ -76,8 +76,8 @@ def decrypt_pass(enc_pass, key):
 #generate salt and setup files.
 def tmp_setup():
     fname = base64.urlsafe_b64encode(os.urandom(16)).decode()
+    fname = fname + '.pdb'
     print(fname)
-    #fname = base64.urlsafe_b64decode(fname)
 
 
 
