@@ -9,9 +9,7 @@ from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.fernet import Fernet, InvalidToken
 
 #TODO:
-#b64urlsafe
-#add install and set up folders.
-#TMPsalt use: os.random(16)
+
 
 tmp_pw = {
     'spicey': b'\x8ds U\xc3d\xa7\xce\xad\x7f\x01\rX\xde\xaf\xb6', 
@@ -26,15 +24,15 @@ def main(loc_id):
         print(tmp_pw[loc_id])
     else:
         exit('Unauthorized!')
-    test1 = encrypt_pass('asdf', tmp_pw['skeleton'])
+    test1 = encrypt_file('asdf', tmp_pw['skeleton'])
     print(test1)
     test1 = test1.decode()
-    test2 = decrypt_pass(test1, 'Dm1We0qIUPgaesn/Gs2nAmGKKcHMTegvMm/tO8ou0p3=')
+    test2 = decrypt_file(test1, 'Dm1We0qIUPgaesn/Gs2nAmGKKcHMTegvMm/tO8ou0p3=')
     print(test2)
-    tmp_setup()
+    create_db()
     #unmatching keys still decrypt? Only if changed at the end
     try:
-        print(decrypt_pass(tmp_pw[sys.argv[1]], pass_hash))
+        print(decrypt_file(tmp_pw[sys.argv[1]], pass_hash))
     except InvalidToken:
         print('Unauthorized!')
     except:
@@ -61,24 +59,23 @@ def gen_hash(user_pass):
     return base64.urlsafe_b64encode(kdf.derive(user_pass))
 
 #encrypt/decrypt passwords using Fernet. Returns a b64 byte-object
-def encrypt_pass(unenc_pass, key):
+def encrypt_file(unenc_file, key):
     key = key.encode()
-    unenc_pass = unenc_pass.encode()
+    unenc_file = unenc_file.encode()
     fer = Fernet(key)
-    return fer.encrypt(unenc_pass)
+    return fer.encrypt(unenc_file)
     
-def decrypt_pass(enc_pass, key):
+def decrypt_file(enc_file, key):
     key = key.encode()
-    enc_pass = enc_pass.encode()
+    enc_file = enc_file.encode()
     fer = Fernet(key)
-    return fer.decrypt(enc_pass)
+    return fer.decrypt(enc_file)
 
 #generate salt and setup dbfile.
-def tmp_setup():
+def create_db():
     fname = os.urandom(16).hex()
     f = open(fname + 'db', 'w+')
     f.close()
-
 
 if __name__ == '__main__':
     main(sys.argv[1])
