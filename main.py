@@ -29,7 +29,7 @@ def main(loc_id):
     test1 = test1.decode()
     test2 = decrypt_file(test1, 'Dm1We0qIUPgaesn/Gs2nAmGKKcHMTegvMm/tO8ou0p3=')
     print(test2)
-    create_db()
+    get_salt()
     #unmatching keys still decrypt? Only if changed at the end
     try:
         print(decrypt_file(tmp_pw[sys.argv[1]], pass_hash))
@@ -74,8 +74,13 @@ def decrypt_file(enc_file, key):
 #generate salt and setup dbfile.
 def create_db():
     fname = os.urandom(16).hex()
-    f = open(fname + 'db', 'w+')
+    f = open(fname + '.dbdecr', 'w+')
     f.close()
+
+def get_salt():   
+    for f in os.listdir(os.getcwd()):
+        if f.endswith('.dbdecr') or f.endswith('.dbencr'):
+            print(f.split('.')[0])
 
 if __name__ == '__main__':
     main(sys.argv[1])
