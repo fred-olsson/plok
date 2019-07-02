@@ -73,11 +73,10 @@ def decrypt_pass(enc_pass, key):
     fer = Fernet(key)
     return fer.decrypt(enc_pass)
 
-#generate salt and setup files.
+#generate salt and setup dbfile.
 def tmp_setup():
-    fname = base64.urlsafe_b64encode(os.urandom(16)).decode()
-    fname = fname + '.pdb'
-    f = open(fname, 'w+')
+    fname = os.urandom(16).hex()
+    f = open(fname + 'db', 'w+')
     f.close()
 
 
