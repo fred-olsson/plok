@@ -11,6 +11,7 @@ from cryptography.fernet import Fernet, InvalidToken
 
 #TODO:
 #switching to file encryption and json
+#put, delete pw from db. 
 
 tmp_pw = {
     'spicey': b'\x8ds U\xc3d\xa7\xce\xad\x7f\x01\rX\xde\xaf\xb6', 
