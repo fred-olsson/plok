@@ -1,3 +1,3 @@
-## Password manager written in Python
+# plok
 
-# Not safe, work in progress
+## Password manager written in Python
