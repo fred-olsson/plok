@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import sys
+import json
 import base64
 from getpass import getpass 
 from cryptography.hazmat.backends import default_backend
@@ -9,7 +10,7 @@ from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.fernet import Fernet, InvalidToken
 
 #TODO:
-
+#switching to file encryption and json
 
 tmp_pw = {
     'spicey': b'\x8ds U\xc3d\xa7\xce\xad\x7f\x01\rX\xde\xaf\xb6', 
@@ -20,16 +21,7 @@ tmp_pw = {
 
 def main(loc_id):
     pass_hash = gen_hash(get_pass()).decode()
-    if (pass_hash == tmp_pw['skeleton']):
-        print(tmp_pw[loc_id])
-    else:
-        exit('Unauthorized!')
-    test1 = encrypt_file('asdf', tmp_pw['skeleton'])
-    print(test1)
-    test1 = test1.decode()
-    test2 = decrypt_file(test1, 'Dm1We0qIUPgaesn/Gs2nAmGKKcHMTegvMm/tO8ou0p3=')
-    print(test2)
-    get_salt()
+    get_spice()
     #unmatching keys still decrypt? Only if changed at the end
     try:
         print(decrypt_file(tmp_pw[sys.argv[1]], pass_hash))
@@ -58,7 +50,7 @@ def gen_hash(user_pass):
     )
     return base64.urlsafe_b64encode(kdf.derive(user_pass))
 
-#encrypt/decrypt passwords using Fernet. Returns a b64 byte-object
+#encrypt/decrypt files using Fernet.
 def encrypt_file(unenc_file, key):
     key = key.encode()
     unenc_file = unenc_file.encode()
@@ -77,7 +69,7 @@ def create_db():
     f = open(fname + '.dbdecr', 'w+')
     f.close()
 
-def get_salt():   
+def get_spice():   
     for f in os.listdir(os.getcwd()):
         if f.endswith('.dbdecr') or f.endswith('.dbencr'):
             print(f.split('.')[0])
