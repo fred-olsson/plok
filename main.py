@@ -22,7 +22,7 @@ tmp_pw = {
 def main(loc_id):
     pass_hash = gen_hash(get_pass()).decode()
     get_spice()
-    #unmatching keys still decrypt? Only if changed at the end
+    #unmatching keys still decrypt? Only if changed at the end. too weak pass?
     try:
         print(decrypt_file(tmp_pw[sys.argv[1]], pass_hash))
     except InvalidToken:
@@ -51,12 +51,20 @@ def gen_hash(user_pass):
     return base64.urlsafe_b64encode(kdf.derive(user_pass))
 
 #encrypt/decrypt files using Fernet.
-def encrypt_file(unenc_file, key):
-    key = key.encode()
-    unenc_file = unenc_file.encode()
+# def encrypt_file(unenc_file, key):
+#     key = key.encode()
+#     unenc_file = unenc_file.encode()
+#     fer = Fernet(key)
+#     return fer.encrypt(unenc_file)
+#not tested
+def encrypt_file(key):
+    fname = get_spice + '.json'
+    f = open(fname, 'w+')
     fer = Fernet(key)
-    return fer.encrypt(unenc_file)
-    
+    encr_file = fer.encrypt(f)
+    f.write(encr_file)
+    f.close()
+
 def decrypt_file(enc_file, key):
     key = key.encode()
     enc_file = enc_file.encode()
@@ -71,7 +79,7 @@ def create_db():
 
 def get_spice():   
     for f in os.listdir(os.getcwd()):
-        if f.endswith('.dbdecr') or f.endswith('.dbencr'):
+        if f.endswith('.json'):
             print(f.split('.')[0])
 
 if __name__ == '__main__':
