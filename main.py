@@ -21,10 +21,8 @@ tmp_pw = {
 
 def main(loc_id):
     pass_hash = gen_hash(get_pass()).decode()
-    get_spice()
-    #unmatching keys still decrypt? Only if changed at the end. too weak pass?
     try:
-        print(decrypt_file(tmp_pw[sys.argv[1]], pass_hash))
+        print(decrypt_file(pass_hash))
     except InvalidToken:
         print('Unauthorized!')
     except:
@@ -44,7 +42,7 @@ def gen_hash(user_pass):
     kdf = PBKDF2HMAC(
         algorithm=hashes.SHA256(),
         length=32,
-        salt=tmp_pw['spicey'],
+        salt=bytes.fromhex(get_spice()),
         iterations=100000,
         backend=default_backend()
     )
@@ -56,32 +54,41 @@ def gen_hash(user_pass):
 #     unenc_file = unenc_file.encode()
 #     fer = Fernet(key)
 #     return fer.encrypt(unenc_file)
+
+# def decrypt_file(enc_file, key):
+#     key = key.encode()
+#     enc_file = enc_file.encode()
+#     fer = Fernet(key)
+#     return fer.decrypt(enc_file)
 #not tested
 def encrypt_file(key):
     fname = get_spice + '.json'
     f = open(fname, 'w+')
-    data = f.read()
+    data = json.loads(f.read())
     fer = Fernet(key)
     encr_file = fer.encrypt(data)
     f.write(encr_file)
     f.close()
 
-def decrypt_file(enc_file, key):
-    key = key.encode()
-    enc_file = enc_file.encode()
+def decrypt_file(key):
+    fname = get_spice + '.json'
+    f = open(fname, 'w+')
+    data = f.read()
     fer = Fernet(key)
-    return fer.decrypt(enc_file)
+    decr_file = json.loads(fer.decrypt(data))
+    f.write(decr_file)
+    f.close()
 
 #generate salt and setup dbfile.
 def create_db():
     fname = os.urandom(16).hex()
-    f = open(fname + '.dbdecr', 'w+')
+    f = open(fname + '.json', 'w+')
     f.close()
 
 def get_spice():   
     for f in os.listdir(os.getcwd()):
         if f.endswith('.json'):
-            print(f.split('.')[0])
+            return f.split('.')[0]
 
 if __name__ == '__main__':
     main(sys.argv[1])
