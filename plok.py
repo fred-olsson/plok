@@ -13,13 +13,6 @@ from cryptography.fernet import Fernet, InvalidToken
 #switching to file encryption and json
 #put, delete pw from db. 
 
-tmp_pw = {
-    'spicey': b'\x8ds U\xc3d\xa7\xce\xad\x7f\x01\rX\xde\xaf\xb6', 
-    'skeleton': 'Dm1We0qIUPgaesn_Gs2nAmGKKcHMTegvMm_tO8ou0p0=',
-    'facebook': 'gAAAAABcvRYJC8HYNRGm6M4Uh_nXg-cGUc5N_IwDuUCos4a1AwRV2OYHVC1XAMybyyFU7FbQlFt9tnU_zxTNWZXFL2-EZS2eOQ==',
-    'youtube': 'qwerty'
-}
-
 def main(loc_id):
     pass_hash = gen_hash(get_pass()).decode()
     try:
@@ -61,6 +54,7 @@ def gen_hash(user_pass):
 #     enc_file = enc_file.encode()
 #     fer = Fernet(key)
 #     return fer.decrypt(enc_file)
+
 #not tested
 def encrypt_file(key):
     fname = get_spice + '.json'
