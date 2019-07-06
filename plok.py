@@ -16,8 +16,10 @@ from cryptography.fernet import Fernet, InvalidToken
 #put, delete pw from db. 
 
 def main(loc_id):
-    pass_hash = gen_hash(get_pass())
-    gen_pass(20, 'facebook')
+    #pass_hash = gen_hash(get_pass())
+    #create_db()
+    for i in range(10):
+        gen_pass(20, 'facebook%d' % i )
 
     # try:
     #     print(decrypt_file(pass_hash))
@@ -82,19 +84,19 @@ def decrypt_file(key):
 def gen_pass(pw_len, service):
     letters_digits = string.ascii_letters + string.digits
     pw_data = {service: ''.join(random.choice(letters_digits) for i in range(pw_len))}
-    pw_json = json.dumps(pw_data)
     file_size = os.path.getsize(get_spice() + '.json')
-    with open(get_spice() + '.json', mode='w+') as f:
-        if file_size > 0:
+    if file_size > 0:
+        with open(get_spice() + '.json', mode='r') as f:
             f_json = json.load(f)
-            pw_json += f_json
-            f.write(pw_json)
-            print('yoo from if')
-        else:
-            f.write(pw_json)
-            print('yoo from else')
-        print('yoo from close')
-        f.close()
+            f.close()
+        with open(get_spice() + '.json', mode='w') as f:
+            f_json.update(pw_data)
+            json.dump(f_json, f)
+            f.close()
+    else:
+        with open(get_spice() + '.json', mode='w') as f:
+            json.dump(pw_data, f)
+            f.close()
 
 #generate salt and setup dbfile.
 def create_db():
