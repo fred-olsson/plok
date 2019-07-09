@@ -64,7 +64,7 @@ def gen_hash(user_pass):
 #not tested
 def encrypt_file(key):
     fname = get_spice + '.json'
-    f = open(fname, 'w+')
+    f = open(fname, 'w')
     data = json.loads(f.read())
     fer = Fernet(key)
     encr_file = fer.encrypt(data)
@@ -73,7 +73,7 @@ def encrypt_file(key):
 
 def decrypt_file(key):
     fname = get_spice + '.json'
-    f = open(fname, 'w+')
+    f = open(fname, 'w')
     data = f.read()
     fer = Fernet(key)
     decr_file = json.loads(fer.decrypt(data))
