@@ -12,14 +12,16 @@ from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.fernet import Fernet, InvalidToken
 
 #TODO:
-#switching to file encryption and json
 #put, delete pw from db. 
 
 def main(loc_id):
-    #pass_hash = gen_hash(get_pass())
+    pass_hash = gen_hash(get_pass())
     #create_db()
-    for i in range(10):
-        gen_pass(20, 'facebook%d' % i )
+    # for i in range(10):
+    #     gen_pass(20, 'facebook%d' % i )
+
+    #encrypt_file(pass_hash)
+    decrypt_file(pass_hash)
 
     # try:
     #     print(decrypt_file(pass_hash))
@@ -49,38 +51,25 @@ def gen_hash(user_pass):
     return base64.urlsafe_b64encode(kdf.derive(user_pass))
 
 #encrypt/decrypt files using Fernet.
-# def encrypt_file(unenc_file, key):
-#     key = key.encode()
-#     unenc_file = unenc_file.encode()
-#     fer = Fernet(key)
-#     return fer.encrypt(unenc_file)
-
-# def decrypt_file(enc_file, key):
-#     key = key.encode()
-#     enc_file = enc_file.encode()
-#     fer = Fernet(key)
-#     return fer.decrypt(enc_file)
-
-#not tested
 def encrypt_file(key):
-    fname = get_spice + '.json'
+    fname = get_spice() + '.json'
     with open(fname, mode='rb') as f:
-        data = json.loads(f.read())
+        data = f.read()
         f.close()
-    with open(fname, mode='w') as f:
+    with open(fname, mode='wb') as f:
         fer = Fernet(key)
         encr_file = fer.encrypt(data)
         f.write(encr_file)
         f.close()
 
 def decrypt_file(key):
-    fname = get_spice + '.json'
+    fname = get_spice() + '.json'
     with open(fname, mode='rb') as f:
         data = f.read()
         f.close()
-    with open(fname, mode='w') as f:
+    with open(fname, mode='wb') as f:
         fer = Fernet(key)
-        decr_file = json.loads(fer.decrypt(data))
+        decr_file = fer.decrypt(data)
         f.write(decr_file)
         f.close()
 
