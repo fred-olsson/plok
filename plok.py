@@ -64,21 +64,25 @@ def gen_hash(user_pass):
 #not tested
 def encrypt_file(key):
     fname = get_spice + '.json'
-    f = open(fname, 'w')
-    data = json.loads(f.read())
-    fer = Fernet(key)
-    encr_file = fer.encrypt(data)
-    f.write(encr_file)
-    f.close()
+    with open(fname, mode='rb') as f:
+        data = json.loads(f.read())
+        f.close()
+    with open(fname, mode='w') as f:
+        fer = Fernet(key)
+        encr_file = fer.encrypt(data)
+        f.write(encr_file)
+        f.close()
 
 def decrypt_file(key):
     fname = get_spice + '.json'
-    f = open(fname, 'w')
-    data = f.read()
-    fer = Fernet(key)
-    decr_file = json.loads(fer.decrypt(data))
-    f.write(decr_file)
-    f.close()
+    with open(fname, mode='rb') as f:
+        data = f.read()
+        f.close()
+    with open(fname, mode='w') as f:
+        fer = Fernet(key)
+        decr_file = json.loads(fer.decrypt(data))
+        f.write(decr_file)
+        f.close()
 
 #generate password and put it in db
 def gen_pass(pw_len, service):
@@ -101,8 +105,8 @@ def gen_pass(pw_len, service):
 #generate salt and setup dbfile.
 def create_db():
     fname = os.urandom(16).hex()
-    f = open(fname + '.json', 'w+', encoding='utf-8')
-    f.close()
+    with open(fname + '.json', mode='w+', encoding='utf-8') as f:
+        f.close()
 
 def get_spice():   
     for file in os.listdir(os.getcwd()):
