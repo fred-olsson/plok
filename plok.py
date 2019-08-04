@@ -5,13 +5,14 @@ import json
 import base64
 import random
 import string
+import pyperclip
 from getpass import getpass 
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.fernet import Fernet, InvalidToken
 
-#TODO:  delete pw from db, change pw, output to clipboard, add options/args. 
+#TODO:  delete pw from db, change pw, add options/args. 
 
 def main(loc_id):
     pass_hash = gen_hash(get_input_pass())
@@ -21,7 +22,7 @@ def main(loc_id):
 
     #encrypt_file(pass_hash)
     #decrypt_file(pass_hash)
-    #print(get_db_pass(loc_id, pass_hash))
+    pyperclip.copy(get_db_pass(loc_id, pass_hash))
 
     # try:
     #     print(decrypt_file(pass_hash))
@@ -34,7 +35,7 @@ def main(loc_id):
 def get_input_pass():
     print('Password:')
     try:
-        user_data = getpass('> ')
+        user_data = getpass('>')
     except:
         print(sys.exc_info())
     return user_data.encode()
