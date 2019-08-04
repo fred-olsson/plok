@@ -95,7 +95,6 @@ def get_db_pass(service, key):
     pw_data = json.loads(fer.decrypt(data))
     return pw_data[service]
 
-
 #generate password and put it in db
 def gen_pass(pw_len, service):
     letters_digits = string.ascii_letters + string.digits
@@ -113,7 +112,6 @@ def gen_pass(pw_len, service):
         with open(get_spice() + '.json', mode='w') as f:
             json.dump(pw_data, f)
             f.close()
-
 
 if __name__ == '__main__':
     main(sys.argv[1])
