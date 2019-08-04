@@ -86,16 +86,6 @@ def get_spice():
         if file.endswith('.json'):
             return file.split('.')[0]
 
-#get pass from db
-def get_db_pass(service, key):
-    fname = get_spice() + '.json'
-    with open(fname, mode='rb') as f:
-        data = f.read()
-        f.close()
-    fer = Fernet(key)
-    pw_data = json.loads(fer.decrypt(data))
-    return pw_data[service]
-
 #generate password and put it in db
 def gen_pass(pw_len, service):
     letters_digits = string.ascii_letters + string.digits
@@ -113,6 +103,16 @@ def gen_pass(pw_len, service):
         with open(get_spice() + '.json', mode='w') as f:
             json.dump(pw_data, f)
             f.close()
+
+#get pass from db
+def get_db_pass(service, key):
+    fname = get_spice() + '.json'
+    with open(fname, mode='rb') as f:
+        data = f.read()
+        f.close()
+    fer = Fernet(key)
+    pw_data = json.loads(fer.decrypt(data))
+    return pw_data[service]
 
 if __name__ == '__main__':
     main(sys.argv[1])
