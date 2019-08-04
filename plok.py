@@ -11,17 +11,17 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.fernet import Fernet, InvalidToken
 
-#TODO:
-#put, delete pw from db. 
+#TODO:  delete pw from db, change pw, output to clipboard, add options/args. 
 
 def main(loc_id):
-    pass_hash = gen_hash(get_pass())
+    pass_hash = gen_hash(get_input_pass())
     #create_db()
     # for i in range(10):
     #     gen_pass(20, 'facebook%d' % i )
 
     #encrypt_file(pass_hash)
-    decrypt_file(pass_hash)
+    #decrypt_file(pass_hash)
+    #print(get_db_pass(loc_id, pass_hash))
 
     # try:
     #     print(decrypt_file(pass_hash))
@@ -31,7 +31,7 @@ def main(loc_id):
     #     print(sys.exc_info())
  
 #get user input and return it as a byte-object
-def get_pass():
+def get_input_pass():
     print('Password:')
     try:
         user_data = getpass('> ')
@@ -73,6 +73,29 @@ def decrypt_file(key):
         f.write(decr_file)
         f.close()
 
+#generate salt and setup dbfile.
+def create_db():
+    fname = os.urandom(16).hex()
+    with open(fname + '.json', mode='w+', encoding='utf-8') as f:
+        f.close()
+
+#get salt
+def get_spice():   
+    for file in os.listdir(os.getcwd()):
+        if file.endswith('.json'):
+            return file.split('.')[0]
+
+#get pass from db
+def get_db_pass(service, key):
+    fname = get_spice() + '.json'
+    with open(fname, mode='rb') as f:
+        data = f.read()
+        f.close()
+    fer = Fernet(key)
+    pw_data = json.loads(fer.decrypt(data))
+    return pw_data[service]
+
+
 #generate password and put it in db
 def gen_pass(pw_len, service):
     letters_digits = string.ascii_letters + string.digits
@@ -91,16 +114,6 @@ def gen_pass(pw_len, service):
             json.dump(pw_data, f)
             f.close()
 
-#generate salt and setup dbfile.
-def create_db():
-    fname = os.urandom(16).hex()
-    with open(fname + '.json', mode='w+', encoding='utf-8') as f:
-        f.close()
-
-def get_spice():   
-    for file in os.listdir(os.getcwd()):
-        if file.endswith('.json'):
-            return file.split('.')[0]
 
 if __name__ == '__main__':
     main(sys.argv[1])
